@@ -4,28 +4,55 @@ public class MergeSort implements Sorter {
 
     @Override
     public int[] sort(int[] values) {
-        // mergesort implementation
+        if (values.length <= 1) return values;
+
+        int mid = values.length/2;
+        int leftArray[] = new int[mid];
+        int rightArray[] = new int[values.length - mid];
+
+        int i = 0;
+        int j = 0;
+
+        for(; i < values.length; i++){
+            if (i < mid){
+                leftArray[i] = values[i];
+            } else {
+                rightArray[j] = values[i];
+                j++;
+            }
+        }
+        sort(leftArray);
+        sort(rightArray);
+        merge(leftArray, rightArray, values);
+
         return values;
     }
 
-    public int[] merge(int[] left, int[] right) {
-        int[] result = new int[left.length + right.length];
-        int i = 0, j = 0, k = 0;
+    public static void merge(int[] left, int[] right, int[] values) {
+        int leftSize = values.length / 2;
+        int rightSize = values.length - leftSize;
+        int i = 0, l = 0, r = 0;
 
-        while (i < left.length && j < right.length) {
-            if (left[i] <= right[j]) {
-                result[k++] = left[i++];
+        while (l < leftSize && r < rightSize) {
+            if (left[l] < right[r]){
+                values[i] = left[l];
+                i++;
+                l++;
             } else {
-                result[k++] = right[j++];
+                values[i] = right[l];
+                i++;
+                r++;
             }
         }
-
-        while (i < left.length) {
-            result[k++] = left[i++];
+        while (l < leftSize) {
+            values[i] = left[l];
+            i++;
+            l++;
         }
-        while (j < left.length) {
-            result[k++] = right[j++];
+        while (r < rightSize) {
+            values[i] = right[r];
+            i++;
+            r++;
         }
-        return result;
     }
 }
