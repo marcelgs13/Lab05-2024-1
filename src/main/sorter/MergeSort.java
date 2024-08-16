@@ -4,55 +4,53 @@ public class MergeSort implements Sorter {
 
     @Override
     public int[] sort(int[] values) {
-        if (values.length <= 1) return values;
-
-        int mid = values.length/2;
-        int leftArray[] = new int[mid];
-        int rightArray[] = new int[values.length - mid];
-
-        int i = 0;
-        int j = 0;
-
-        for(; i < values.length; i++){
-            if (i < mid){
-                leftArray[i] = values[i];
-            } else {
-                rightArray[j] = values[i];
-                j++;
-            }
+        if (values.length < 2) {
+            return values;
         }
-        sort(leftArray);
-        sort(rightArray);
-        merge(leftArray, rightArray, values);
+        int meio = values.length / 2;
+        int[] left = new int[meio];
+        int[] right = new int[values.length - meio];
 
-        return values;
+        System.arraycopy(values, 0, left, 0, meio);
+        System.arraycopy(values, meio, right, 0, values.length - meio);
+
+        sort(left);
+        sort(right);
+
+        int[] resultado = merge(left, right);
+
+        System.arraycopy(resultado, 0, values, 0, values.length);
+
+        return merge(left, right);
     }
 
-    public static void merge(int[] left, int[] right, int[] values) {
-        int leftSize = values.length / 2;
-        int rightSize = values.length - leftSize;
-        int i = 0, l = 0, r = 0;
+    
 
-        while (l < leftSize && r < rightSize) {
-            if (left[l] < right[r]){
-                values[i] = left[l];
-                i++;
-                l++;
+    public int[] merge(int[] left, int[] right) {
+        int[] resultado = new int[left.length + right.length];
+        int i = 0, j = 0, k = 0;
+
+        while (i < left.length && j < right.length) {
+            if (left[i] <= right[j]) {
+                resultado[k] = left[i];
             } else {
-                values[i] = right[l];
-                i++;
-                r++;
+                resultado[k] = right[j];
+                j++;
             }
+            k++;
         }
-        while (l < leftSize) {
-            values[i] = left[l];
+
+        while (i < left.length) {
+            resultado[k] = left[i];
             i++;
-            l++;
+            k++;
         }
-        while (r < rightSize) {
-            values[i] = right[r];
-            i++;
-            r++;
+
+        while ( j < right.length) {
+            resultado[k] = right[j];
+            j++;
+            k++;
         }
+        return resultado;
     }
 }
